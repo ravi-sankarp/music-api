@@ -10,20 +10,14 @@ const server = app.listen(port, () => {
 
 // Setup for graceful shut down
 export const gracefulshutdown = async (err: Error | string) => {
-  try {
-    if (err && typeof err !== 'string') {
-      console.log(err);
-    }
-    // closing the server
-    server.close(() => {
-      console.log('Shutting down');
-      process.exit(0);
-    });
-  } catch (error) {
-    const err = error as Error;
-    console.log(error);
-    process.exit(1);
+  if (err && typeof err !== 'string') {
+    console.log(err);
   }
+  // closing the server
+  server.close(() => {
+    console.log('Shutting down');
+    process.exit(0);
+  });
 };
 
 // handling unhandled exceptions and errors

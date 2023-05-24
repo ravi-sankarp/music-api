@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { ExpressControllerFn } from '../types/types';
 
 /**
  * Simple middleware for handling exceptions inside of async express routes and passing them to your express error handlers.
@@ -6,9 +7,7 @@ import { NextFunction, Request, Response } from 'express';
  * @returns {Function}
  */
 
-export const asyncHandler = (fn: Function) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+export const asyncHandler =
+  (fn: ExpressControllerFn) => (req: Request, res: Response, next: NextFunction) => {
     fn(req, res, next).catch(next);
   };
-};
-

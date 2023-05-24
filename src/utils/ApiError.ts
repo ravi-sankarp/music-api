@@ -8,6 +8,7 @@ import { HttpStatusCodes } from '../constants';
 
 export class ApiError extends Error {
   statusCode: HttpStatusCodes;
+
   status: string;
 
   constructor(message: string, statusCode: HttpStatusCodes) {
