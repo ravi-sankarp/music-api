@@ -7,6 +7,7 @@
     "start": "node dist/main.js",
     "build": "tsc",
     "lint": "npx eslint --fix .",
+    "pretty": "npx prettier --write src/**/*",
     "dev": "nodemon src/main.ts"
   },
   "author": "",
