@@ -1,4 +1,4 @@
-import { ObjectValues } from '../types/types';
+import { ObjectValues } from '../../types/types';
 
 export const HTTP_STATUS_CODES = {
   OK: 200,

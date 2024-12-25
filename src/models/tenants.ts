@@ -3,13 +3,13 @@ import { db } from '../helpers';
 
 interface TenantAttributes {
   tenant_id: string;
-  created_by?: string;
+  created_by: string;
   created_on: Date;
   updated_on?: Date;
   updated_by?: string;
 }
 
-interface TenantCreationAttributes extends Optional<TenantAttributes, 'tenant_id'> {}
+interface TenantCreationAttributes extends Optional<TenantAttributes, 'tenant_id' | 'created_on'> {}
 
 interface TenantInstance
   extends Model<TenantAttributes, TenantCreationAttributes>,
@@ -39,4 +39,9 @@ export const Tenants = db.define<TenantInstance>('tenants', {
     allowNull: true,
     type: DataTypes.UUIDV4
   }
+},{
+  freezeTableName: true,
+  timestamps: false,
+  createdAt: false,
+  updatedAt: false
 });

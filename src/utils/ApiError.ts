@@ -1,4 +1,4 @@
-import { HttpStatusCodes } from '../constants';
+import { HttpStatusCodes } from '../common/constants';
 
 /**
  * Custom Error class which extends the default Error.Uesful for passing error messagw along with status code to the end user.The Default Error can only accept one argument that is the error message.This extended AppError accepts 2 arguments

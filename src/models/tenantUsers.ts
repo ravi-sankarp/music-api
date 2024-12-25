@@ -1,10 +1,12 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { db } from '../helpers';
+import { RoleToIdMap, RoleToStringMap } from '../common/constants';
+import { ObjectValues } from '../types/types';
 
 interface TenantUserAttributes {
   user_id: string;
   tenant_id: string;
-  role_id: number;
+  role_id: keyof typeof RoleToStringMap;
   deleted: boolean;
   created_by: string;
   created_on: Date;
@@ -13,7 +15,7 @@ interface TenantUserAttributes {
 }
 
 interface TenantUserCreationAttributes
-  extends Optional<TenantUserAttributes, 'user_id' | 'tenant_id'> {}
+  extends Optional<TenantUserAttributes, 'deleted' | 'created_on' | 'updated_by' | 'updated_on'> {}
 
 interface TenantUserInstance
   extends Model<TenantUserAttributes, TenantUserCreationAttributes>,
@@ -56,4 +58,9 @@ export const TenantUsers = db.define<TenantUserInstance>('tenant_users', {
     allowNull: true,
     type: DataTypes.DATE
   }
+},{
+  freezeTableName: true,
+  timestamps: false,
+  createdAt: false,
+  updatedAt: false
 });

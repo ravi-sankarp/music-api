@@ -29,4 +29,9 @@ export const UserRoles = db.define<UserRoleInstance>('user_roles', {
     allowNull: false,
     type: DataTypes.TEXT
   }
+},{
+  freezeTableName: true,
+  timestamps: false,
+  createdAt: false,
+  updatedAt: false
 });

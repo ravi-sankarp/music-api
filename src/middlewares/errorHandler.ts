@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { ApiError } from '../utils/ApiError';
-import config from '../config';
 import { logger, sendResponse } from '../utils';
+import { config } from '../common/config';
 
 /**
  * Custom express error handler for handling all the errors in the application and sending them to the end user
@@ -37,12 +37,10 @@ export const errorHandler = (
   }
 
   // sending error message for all other scenarios
-  res.status(statusCode).json(
-    sendResponse(res, {
-      status: statusCode,
-      data: null,
-      message: err.message,
-      error: null
-    })
-  );
+  sendResponse(res, {
+    status: statusCode,
+    data: null,
+    message: err.message,
+    error: null
+  });
 };

@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { HttpStatusCodes } from '../constants';
+import { HttpStatusCodes } from '../common/constants';
 
 interface ReponseObj {
   status: HttpStatusCodes;

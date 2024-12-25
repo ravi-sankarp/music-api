@@ -1,11 +1,13 @@
 import { Sequelize } from 'sequelize';
+import { config } from '../common/config';
 
 export const db = new Sequelize(
-  process.env.POSTGRES_DATABASE!,
-  process.env.POSTGRES_USER!,
-  process.env.POSTGRES_PASSWORD,
+  config.POSTGRES_DATABASE!,
+  config.POSTGRES_USER,
+  config.POSTGRES_PASSWORD,
   {
-    host: process.env.POSTGRES_HOST,
+    host: config.POSTGRES_HOST,
+    port: config.POSTGRES_PORT,
     dialect: 'postgres',
     pool: {
       max: 30,
