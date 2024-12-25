@@ -14,6 +14,16 @@ export const db = new Sequelize(
       min: 0,
       acquire: 30000,
       idle: 10000
-    }
+    },
+    ...(config.NODE_ENV === 'production'
+      ? {
+          ssl: true,
+          dialectOptions: {
+            ssl: {
+              require: true
+            }
+          }
+        }
+      : {})
   }
 );
