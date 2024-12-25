@@ -12,7 +12,6 @@ const config = {
   logging: true
 };
 
-console.log({ config });
 if (process.env.NODE_ENV === 'production') {
   config.dialectOptions = {
     ssl: {
