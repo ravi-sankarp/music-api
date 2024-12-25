@@ -5,20 +5,25 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module'
   },
-  plugins: ['@typescript-eslint/eslint-plugin'],
+  plugins: [
+    '@typescript-eslint/eslint-plugin',
+    'prettier' // Add Prettier plugin
+  ],
   extends: [
     'plugin:@typescript-eslint/recommended',
     'airbnb-typescript/base',
     'plugin:security/recommended',
-    "plugin:import/recommended"
+    'plugin:import/recommended',
+    'plugin:prettier/recommended' // Integrates Prettier with ESLint
   ],
   root: true,
   env: {
     node: true,
     jest: true
   },
-  ignorePatterns: ['.eslintrc.js'],
+  ignorePatterns: ['.eslintrc.js', 'database/*'],
   rules: {
+    '@typescript-eslint/no-empty-interface': 'off',
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -49,6 +54,7 @@ module.exports = {
       }
     ],
     '@typescript-eslint/semi': [2, 'always'],
-    'no-restricted-syntax': ['warn']
+    'no-restricted-syntax': ['warn'],
+    'prettier/prettier': 'error'
   }
 };

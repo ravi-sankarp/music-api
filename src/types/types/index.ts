@@ -5,3 +5,5 @@ export type ExpressControllerFn = (
   res: Response,
   next?: NextFunction
 ) => Promise<void>;
+
+export type ObjectValues<T> = T[keyof T];
