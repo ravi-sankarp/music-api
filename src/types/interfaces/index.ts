@@ -6,6 +6,7 @@ export interface JwtPayload {
   parentRefreshTokenHash1: any;
   antiCsrfToken: any;
   user_id: string;
+  tenant_id: string;
   role: string;
   iss: string;
 }

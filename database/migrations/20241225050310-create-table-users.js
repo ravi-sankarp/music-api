@@ -12,8 +12,8 @@ module.exports = {
           "email" VARCHAR(255) NOT NULL UNIQUE,
           "password" VARCHAR(255) NOT NULL,
           "created_by" UUID,
-          "created_on" TIMESTAMPTZ DEFAULT now() NOT NULL,
-          "updated_on" TIMESTAMPTZ
+          "created_at" TIMESTAMPTZ DEFAULT now() NOT NULL,
+          "updated_at" TIMESTAMPTZ
       );
     `);
   },

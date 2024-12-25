@@ -5,5 +5,8 @@ export const RESPONSES = {
   LOGIN_SUCCESSFUL: 'Login successful',
   USER_NOT_FOUND: 'User not found',
   USER_CREATED_SUCCESSFULLY: 'User created successfully',
-  USER_LOGGED_OUT_SUCCESSFULLY: 'User logged out successfully'
+  USER_LOGGED_OUT_SUCCESSFULLY: 'User logged out successfully',
+  USERS_RETRIEVED_SUCCESSFULLY: 'Users retrieved successfully',
+  USER_DELETED_SUCCESSFULLY: 'User deleted successfully',
+  BAD_REQUEST: 'Bad Request'
 };

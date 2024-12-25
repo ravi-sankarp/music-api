@@ -2,7 +2,7 @@ import supertokens from 'supertokens-node';
 import Session from 'supertokens-node/recipe/session';
 import { JwtPayload } from '../types/interfaces';
 import { ApiError } from '../utils';
-import { HTTP_STATUS_CODES } from '../common/constants';
+import { HTTP_STATUS_CODES, RESPONSES } from '../common/constants';
 import { config } from '../common/config';
 
 export const supertokensInit = supertokens.init({
@@ -24,7 +24,11 @@ export const supertokensInit = supertokens.init({
   ]
 });
 
-export const createSession = async (payload: { user_id: string; role: string }) => {
+export const createSession = async (payload: {
+  tenant_id: string;
+  user_id: string;
+  role: string;
+}) => {
   const session = await Session.createNewSessionWithoutRequestResponse(
     'public',
     supertokens.convertToRecipeUserId(payload.user_id),
@@ -41,7 +45,7 @@ export const validateSession = async (token: string) => {
     return tokenPayload;
   } catch (err) {
     console.log(err);
-    throw new ApiError('Invalid token', HTTP_STATUS_CODES.UNAUTHORIZED);
+    throw new ApiError(RESPONSES.UNAUTHORIZED_ACCESS, HTTP_STATUS_CODES.UNAUTHORIZED);
   }
 };
 
@@ -49,6 +53,6 @@ export const revokeSession = async (token: string) => {
   try {
     await Session.revokeSession(token);
   } catch (err) {
-    throw new ApiError('Invalid token', HTTP_STATUS_CODES.UNAUTHORIZED);
+    throw new ApiError(RESPONSES.UNAUTHORIZED_ACCESS, HTTP_STATUS_CODES.UNAUTHORIZED);
   }
 };

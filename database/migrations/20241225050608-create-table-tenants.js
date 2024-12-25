@@ -6,10 +6,10 @@ module.exports = {
       CREATE TABLE "tenants" (
           "tenant_id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
           "deleted" BOOLEAN DEFAULT FALSE NOT NULL,
-          "created_on" TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+          "created_at" TIMESTAMPTZ DEFAULT NOW() NOT NULL,
           "created_by" UUID REFERENCES "users"("user_id") ON DELETE RESTRICT ON UPDATE RESTRICT,
           "updated_by" UUID REFERENCES "users"("user_id") ON DELETE RESTRICT ON UPDATE RESTRICT,
-          "updated_on" TIMESTAMPTZ
+          "updated_at" TIMESTAMPTZ
       );
     `);
   },

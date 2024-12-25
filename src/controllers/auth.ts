@@ -6,7 +6,7 @@ import { createUserAndTenantUser, getTenantUserByUserId, getUserByEmail } from '
 import { comparePassword, hashPassword } from '../helpers/password';
 import { createSession, revokeSession } from '../helpers';
 import { AuthenticatedRequest } from '../types/interfaces';
-import { Sequelize, UniqueConstraintError } from 'sequelize';
+import { UniqueConstraintError } from 'sequelize';
 
 export const userLogin = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body as UserLogin;
@@ -19,8 +19,8 @@ export const userLogin = asyncHandler(async (req: Request, res: Response) => {
     });
     return;
   }
-
-  if (!comparePassword(password, result.password)) {
+  const passwordCheckResult = await comparePassword(password, result.password);
+  if (!passwordCheckResult) {
     sendResponse(res, {
       message: RESPONSES.USER_NOT_FOUND,
       status: HTTP_STATUS_CODES.NOT_FOUND,
@@ -38,6 +38,7 @@ export const userLogin = asyncHandler(async (req: Request, res: Response) => {
     return;
   }
   const { accessToken } = await createSession({
+    tenant_id: tenantUser.dataValues.tenant_id,
     role: RoleToStringMap[tenantUser.role_id],
     user_id: result.dataValues.user_id
   });
@@ -54,7 +55,7 @@ export const userSignup = asyncHandler(async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body as UserSignup;
     const hashPwd = await hashPassword(password);
-    await createUserAndTenantUser({ email, password: hashPwd });
+    await createUserAndTenantUser({ email, password: hashPwd, role: 'ADMIN' });
     sendResponse(res, {
       message: RESPONSES.USER_CREATED_SUCCESSFULLY,
       status: HTTP_STATUS_CODES.OK,
@@ -67,6 +68,7 @@ export const userSignup = asyncHandler(async (req: Request, res: Response) => {
         status: HTTP_STATUS_CODES.CONFLICT,
         data: null
       });
+      return;
     }
     throw err;
   }

@@ -3,11 +3,11 @@ import { ZodSchema, ZodError } from 'zod';
 import { ApiError, asyncHandler } from '../utils';
 import { HTTP_STATUS_CODES } from '../common/constants';
 
-export const validate = (schema: ZodSchema<any>) => {
+export const validate = (schema: ZodSchema<any>, type: 'body' | 'query' = 'body') => {
   return asyncHandler((req: Request, res: Response, next: NextFunction) => {
     try {
-      const parsedData = schema.parse(req.body);
-      req.body = parsedData;
+      const parsedData = schema.parse(req[type]);
+      req[type] = parsedData;
       next();
     } catch (err) {
       if (err instanceof ZodError) {

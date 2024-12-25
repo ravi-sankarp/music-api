@@ -9,9 +9,9 @@ module.exports = {
           "role_id" INT REFERENCES "user_roles"("id") ON DELETE RESTRICT ON UPDATE RESTRICT,
           "deleted" BOOLEAN DEFAULT FALSE NOT NULL,
           "created_by" UUID REFERENCES "users"("user_id") ON DELETE RESTRICT ON UPDATE RESTRICT,
-          "created_on" TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+          "created_at" TIMESTAMPTZ DEFAULT NOW() NOT NULL,
           "updated_by" UUID REFERENCES "users"("user_id") ON DELETE RESTRICT ON UPDATE RESTRICT,
-          "updated_on" TIMESTAMPTZ,
+          "updated_at" TIMESTAMPTZ,
           PRIMARY KEY ("user_id", "tenant_id")
       );
     `);

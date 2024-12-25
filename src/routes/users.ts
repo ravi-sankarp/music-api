@@ -1,15 +1,38 @@
 import { Router } from 'express';
-import * as authController from '../controllers/auth';
+import * as userController from '../controllers/users';
 import { validate } from '../middlewares/validator';
-import { userLoginSchema, userSignupSchema } from '../common/validations/users';
+import {
+  passwordChangeSchema,
+  userLoginSchema,
+  userSignupSchema,
+  userSignupWithRoleSchema
+} from '../common/validations/users';
 import { userProtectMiddleware } from '../middlewares/authProtect';
+import { usersFilterSchema } from '../common/validations/filters';
 
 const router = Router();
 
-router.post('login', validate(userLoginSchema), authController.userLogin);
+router.get(
+  '/',
+  userProtectMiddleware('ADMIN'),
+  validate(usersFilterSchema, 'query'),
+  userController.getAllUsers
+);
 
-router.post('signup', validate(userSignupSchema), authController.userSignup);
+router.post(
+  '/add-user',
+  userProtectMiddleware('ADMIN'),
+  validate(userSignupWithRoleSchema),
+  userController.createUser
+);
 
-router.get('logout', userProtectMiddleware('all'), authController.userLogout);
+router.put(
+  '/update-password',
+  userProtectMiddleware('all'),
+  validate(passwordChangeSchema),
+  userController.updateUserPasword
+);
+
+router.delete('/:userId', userProtectMiddleware('ADMIN'), userController.deleteUser);
 
 export default router;

@@ -4,12 +4,12 @@ import { db } from '../helpers';
 interface TenantAttributes {
   tenant_id: string;
   created_by: string;
-  created_on: Date;
-  updated_on?: Date;
+  created_at: Date;
+  updated_at?: Date;
   updated_by?: string;
 }
 
-interface TenantCreationAttributes extends Optional<TenantAttributes, 'tenant_id' | 'created_on'> {}
+interface TenantCreationAttributes extends Optional<TenantAttributes, 'tenant_id' | 'created_at'> {}
 
 interface TenantInstance
   extends Model<TenantAttributes, TenantCreationAttributes>,
@@ -26,12 +26,12 @@ export const Tenants = db.define<TenantInstance>('tenants', {
     allowNull: true,
     type: DataTypes.UUIDV4
   },
-  created_on: {
+  created_at: {
     allowNull: false,
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW
   },
-  updated_on: {
+  updated_at: {
     allowNull: true,
     type: DataTypes.DATE
   },

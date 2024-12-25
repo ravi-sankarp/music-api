@@ -1,16 +1,17 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { db } from '../helpers';
+import { TenantUsers } from './tenantUsers';
 
-interface UserAttributes {
+export interface UserAttributes {
   user_id: string;
   email: string;
   password: string;
   created_by?: string;
-  created_on: Date;
-  updated_on?: Date;
+  created_at: Date;
+  updated_at?: Date;
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'user_id' | 'created_on'> {}
+interface UserCreationAttributes extends Optional<UserAttributes, 'user_id' | 'created_at'> {}
 
 interface UserInstance extends Model<UserAttributes, UserCreationAttributes>, UserAttributes {}
 
@@ -36,12 +37,12 @@ export const Users = db.define<UserInstance>(
       allowNull: true,
       type: DataTypes.UUID
     },
-    created_on: {
+    created_at: {
       allowNull: false,
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
     },
-    updated_on: {
+    updated_at: {
       allowNull: true,
       type: DataTypes.DATE
     }
@@ -53,3 +54,6 @@ export const Users = db.define<UserInstance>(
     updatedAt: false
   }
 );
+
+Users.hasOne(TenantUsers, { foreignKey: 'user_id' , as:'tenant_users'});
+TenantUsers.hasOne(Users, { foreignKey: 'user_id' });
