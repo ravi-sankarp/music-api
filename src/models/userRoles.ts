@@ -7,7 +7,7 @@ interface UserRoleAttributes {
   description: string;
 }
 
-interface UserRoleCreationAttributes extends Optional<UserRoleAttributes, 'id'> {}
+type UserRoleCreationAttributes = Optional<UserRoleAttributes, 'id'>
 
 interface UserRoleInstance
   extends Model<UserRoleAttributes, UserRoleCreationAttributes>,

@@ -1,15 +1,46 @@
 import { Router } from 'express';
-import * as authController from '../controllers/auth';
+import * as albumsController from '../controllers/albums';
 import { validate } from '../middlewares/validator';
-import { userLoginSchema, userSignupSchema } from '../common/validations/users';
 import { userProtectMiddleware } from '../middlewares/authProtect';
+import { albumQuerySchema, albumSchema, albumUpdateSchema } from '../common/validations/albums';
+import { idSchema } from '../common/validations/common';
 
 const router = Router();
 
-router.post('login', validate(userLoginSchema), authController.userLogin);
+router.get(
+  '/',
+  userProtectMiddleware('all'),
+  validate(albumQuerySchema, 'query'),
+  albumsController.getAllAlbums
+);
 
-router.post('signup', validate(userSignupSchema), authController.userSignup);
+router.get(
+  '/:id',
+  userProtectMiddleware('all'),
+  validate(idSchema, 'params'),
+  albumsController.getAlbumById
+);
 
-router.get('logout', userProtectMiddleware('all'), authController.userLogout);
+router.post(
+  '/add-album',
+  userProtectMiddleware('ADMIN'),
+  validate(albumSchema),
+  albumsController.createAlbum
+);
+
+router.put(
+  '/:id',
+  userProtectMiddleware(['ADMIN', 'EDITOR']),
+  validate(albumUpdateSchema),
+  validate(idSchema, 'params'),
+  albumsController.updateAlbum
+);
+
+router.delete(
+  '/:id',
+  userProtectMiddleware(['ADMIN', 'EDITOR']),
+  validate(idSchema, 'params'),
+  albumsController.deleteAlbum
+);
 
 export default router;

@@ -1,4 +1,4 @@
-import { Response, NextFunction, Request } from 'express';
+import { Response, NextFunction } from 'express';
 import { ApiError, asyncHandler } from '../utils';
 import { HTTP_STATUS_CODES, RESPONSES, RoleToIdMap } from '../common/constants';
 import { validateSession } from '../helpers';
@@ -6,7 +6,9 @@ import { AuthenticatedRequest } from '../types/interfaces';
 
 //  middleware for checking if user is authorized
 
-export const userProtectMiddleware = (role: keyof typeof RoleToIdMap | 'all') => {
+export const userProtectMiddleware = (
+  role: keyof typeof RoleToIdMap | 'all' | (keyof typeof RoleToIdMap)[]
+) => {
   return asyncHandler(async (req: AuthenticatedRequest, res: Response, next?: NextFunction) => {
     let token: string | undefined;
     if (req.headers.authorization?.startsWith('Bearer')) {
@@ -19,7 +21,12 @@ export const userProtectMiddleware = (role: keyof typeof RoleToIdMap | 'all') =>
       const decodedToken = await validateSession(token);
       if (role !== 'all') {
         // check if user has the correct permission to access this route
-        if (decodedToken.role !== role) {
+        if (Array.isArray(role)) {
+          const isValid = role.find((value) => value === decodedToken.role);
+          if (!isValid) {
+            throw new ApiError(RESPONSES.FORBIDDEN_ACCESS, HTTP_STATUS_CODES.FORBIDDEN);
+          }
+        } else if (decodedToken.role !== role) {
           throw new ApiError(RESPONSES.FORBIDDEN_ACCESS, HTTP_STATUS_CODES.FORBIDDEN);
         }
       }

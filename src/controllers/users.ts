@@ -1,4 +1,4 @@
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { asyncHandler, sendResponse } from '../utils';
 import { HTTP_STATUS_CODES, RESPONSES } from '../common/constants';
 import { UsersFilters } from '../common/validations/filters';
@@ -13,6 +13,7 @@ import { AuthenticatedRequest } from '../types/interfaces';
 import { comparePassword, hashPassword } from '../helpers';
 import { UniqueConstraintError } from 'sequelize';
 import { PasswordChange, UserSignupWithRole } from '../common/validations/users';
+import { IdType } from '../common/validations/common';
 
 export const getAllUsers = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   const filters = req.query as unknown as UsersFilters;
@@ -32,7 +33,8 @@ export const createUser = asyncHandler(async (req: AuthenticatedRequest, res: Re
       email,
       password: hashPwd,
       role,
-      tenantId: req.token.tenant_id
+      tenantId: req.token.tenant_id,
+      createdBy: req.token.user_id
     });
     sendResponse(res, {
       message: RESPONSES.USER_CREATED_SUCCESSFULLY,
@@ -53,7 +55,7 @@ export const createUser = asyncHandler(async (req: AuthenticatedRequest, res: Re
 });
 
 export const deleteUser = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-  const userId = req.params.userId as string;
+  const { id: userId } = req.params as IdType;
 
   if (userId === req.token.user_id) {
     sendResponse(res, {

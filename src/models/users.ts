@@ -11,7 +11,7 @@ export interface UserAttributes {
   updated_at?: Date;
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'user_id' | 'created_at'> {}
+type UserCreationAttributes = Optional<UserAttributes, 'user_id' | 'created_at'>
 
 interface UserInstance extends Model<UserAttributes, UserCreationAttributes>, UserAttributes {}
 

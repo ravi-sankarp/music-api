@@ -3,7 +3,7 @@ import { ZodSchema, ZodError } from 'zod';
 import { ApiError, asyncHandler } from '../utils';
 import { HTTP_STATUS_CODES } from '../common/constants';
 
-export const validate = (schema: ZodSchema<any>, type: 'body' | 'query' = 'body') => {
+export const validate = (schema: ZodSchema<any>, type: 'body' | 'query' | 'params' = 'body') => {
   return asyncHandler((req: Request, res: Response, next: NextFunction) => {
     try {
       const parsedData = schema.parse(req[type]);

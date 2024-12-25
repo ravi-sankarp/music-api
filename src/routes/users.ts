@@ -1,14 +1,10 @@
 import { Router } from 'express';
 import * as userController from '../controllers/users';
 import { validate } from '../middlewares/validator';
-import {
-  passwordChangeSchema,
-  userLoginSchema,
-  userSignupSchema,
-  userSignupWithRoleSchema
-} from '../common/validations/users';
+import { passwordChangeSchema, userSignupWithRoleSchema } from '../common/validations/users';
 import { userProtectMiddleware } from '../middlewares/authProtect';
 import { usersFilterSchema } from '../common/validations/filters';
+import { idSchema } from '../common/validations/common';
 
 const router = Router();
 
@@ -33,6 +29,11 @@ router.put(
   userController.updateUserPasword
 );
 
-router.delete('/:userId', userProtectMiddleware('ADMIN'), userController.deleteUser);
+router.delete(
+  '/:id',
+  userProtectMiddleware('ADMIN'),
+  validate(idSchema, 'params'),
+  userController.deleteUser
+);
 
 export default router;

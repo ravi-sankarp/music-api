@@ -1,15 +1,46 @@
 import { Router } from 'express';
-import * as authController from '../controllers/auth';
+import * as artistController from '../controllers/artists';
 import { validate } from '../middlewares/validator';
-import { userLoginSchema, userSignupSchema } from '../common/validations/users';
 import { userProtectMiddleware } from '../middlewares/authProtect';
+import { artistQuerySchema, artistSchema, artistUpdateSchema } from '../common/validations/artists';
+import { idSchema } from '../common/validations/common';
 
 const router = Router();
 
-router.post('login', validate(userLoginSchema), authController.userLogin);
+router.get(
+  '/',
+  userProtectMiddleware('all'),
+  validate(artistQuerySchema, 'query'),
+  artistController.getAllArtists
+);
 
-router.post('signup', validate(userSignupSchema), authController.userSignup);
+router.get(
+  '/:id',
+  userProtectMiddleware('all'),
+  validate(idSchema, 'params'),
+  artistController.getArtistById
+);
 
-router.get('logout', userProtectMiddleware('all'), authController.userLogout);
+router.post(
+  '/add-artist',
+  userProtectMiddleware('ADMIN'),
+  validate(artistSchema),
+  artistController.createArtist
+);
+
+router.put(
+  '/:id',
+  userProtectMiddleware(['ADMIN', 'EDITOR']),
+  validate(artistUpdateSchema),
+  validate(idSchema, 'params'),
+  artistController.updateArtist
+);
+
+router.delete(
+  '/:id',
+  userProtectMiddleware(['ADMIN', 'EDITOR']),
+  validate(idSchema, 'params'),
+  artistController.deleteArtist
+);
 
 export default router;

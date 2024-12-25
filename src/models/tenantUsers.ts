@@ -15,8 +15,7 @@ interface TenantUserAttributes {
   updated_at?: Date;
 }
 
-interface TenantUserCreationAttributes
-  extends Optional<TenantUserAttributes, 'deleted' | 'created_at' | 'updated_by' | 'updated_at'> {}
+type TenantUserCreationAttributes = Optional<TenantUserAttributes, 'deleted' | 'created_at' | 'updated_by' | 'updated_at'>
 
 interface TenantUserInstance
   extends Model<TenantUserAttributes, TenantUserCreationAttributes>,

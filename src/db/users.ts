@@ -21,12 +21,23 @@ export const createUserAndTenantUser = async (userData: {
   password: string;
   role: keyof typeof RoleToIdMap;
   tenantId?: string;
+  createdBy?: string;
 }) => {
   const transaction = await db.transaction({ autocommit: false });
   try {
-    const user = await Users.create(userData, { transaction });
+    const userCreateObj = {
+      email: userData.email,
+      password: userData.password,
+      created_by: userData.createdBy
+    };
+    const user = await Users.create(userCreateObj, { transaction });
     if (!userData.tenantId) {
-      const tenant = await Tenants.create({ created_by: user.dataValues.user_id }, { transaction });
+      const tenant = await Tenants.create(
+        {
+          created_by: userCreateObj.created_by ? userCreateObj.created_by : user.dataValues.user_id
+        },
+        { transaction }
+      );
       await TenantUsers.create(
         {
           created_by: user.dataValues.user_id,
@@ -39,7 +50,7 @@ export const createUserAndTenantUser = async (userData: {
     } else {
       await TenantUsers.create(
         {
-          created_by: user.dataValues.user_id,
+          created_by: userCreateObj.created_by!,
           role_id: RoleToIdMap[userData.role] as keyof typeof RoleToStringMap,
           tenant_id: userData.tenantId,
           user_id: user.dataValues.user_id
@@ -64,11 +75,11 @@ export const getUsersByTenantId = async (
   JOIN users users
   ON tu.tenant_id = :tenantId
   AND tu.user_id = users.user_id
-  AND tu.user_id <> :userId
   AND tu.deleted = false
   ${filters.role ? `AND tu.role_id = ${RoleToIdMap[filters.role as keyof typeof RoleToIdMap]}` : ''}
   JOIN user_roles roles 
   ON tu.role_id = roles.id
+  ORDER BY tu.created_at DESC
   limit ${filters.limit}
   offset ${filters.offset}
   `;
@@ -81,13 +92,20 @@ export const getUsersByTenantId = async (
 };
 
 export const deleteTenantUser = async (userId: string, tenantId: string) => {
-  await TenantUsers.update({ deleted: true }, { where: { user_id: userId, tenant_id: tenantId } });
+  await TenantUsers.update(
+    { deleted: true, updated_at: new Date() },
+    { where: { user_id: userId, tenant_id: tenantId } }
+  );
 };
 
 export const getUserById = async (userId: string) => {
   const user = await Users.findOne({ where: { user_id: userId } });
   return user;
 };
+
 export const updateUserPasswordById = async (userId: string, newPassword: string) => {
-  await Users.update({ password: newPassword }, { where: { user_id: userId } });
+  await Users.update(
+    { password: newPassword, updated_at: new Date() },
+    { where: { user_id: userId } }
+  );
 };

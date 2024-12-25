@@ -9,7 +9,7 @@ interface TenantAttributes {
   updated_by?: string;
 }
 
-interface TenantCreationAttributes extends Optional<TenantAttributes, 'tenant_id' | 'created_at'> {}
+type TenantCreationAttributes = Optional<TenantAttributes, 'tenant_id' | 'created_at'>
 
 interface TenantInstance
   extends Model<TenantAttributes, TenantCreationAttributes>,
