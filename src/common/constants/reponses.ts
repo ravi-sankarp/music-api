@@ -14,17 +14,22 @@ export const RESPONSES = {
   ARTIST_NOT_FOUND: 'Artist not found',
   ARTIST_CREATED_SUCCESSFULLY: 'Artist created successfully',
   ARTIST_UPDATED_SUCCESSFULLY: 'Artist updated successfully',
-  ARTIST_DELETED_SUCCESSFULLY: 'Artist deleted successfully',
+  ARTIST_DELETED_SUCCESSFULLY: (name: string) => `Artist:${name} deleted successfully`,
   ALBUMS_RETRIEVED_SUCCESSFULLY: 'Albums retrieved successfully',
   ALBUM_RETRIEVED_SUCCESSFULLY: 'Album retrieved successfully',
   ALBUM_NOT_FOUND: 'Album not found',
   ALBUM_CREATED_SUCCESSFULLY: 'Album created successfully',
   ALBUM_UPDATED_SUCCESSFULLY: 'Album updated successfully',
-  ALBUM_DELETED_SUCCESSFULLY: 'Album deleted successfully',
+  ALBUM_DELETED_SUCCESSFULLY: (name: string) => `Album:${name} deleted successfully`,
   TRACKS_RETRIEVED_SUCCESSFULLY: 'Tracks retrieved successfully',
   TRACK_RETRIEVED_SUCCESSFULLY: 'Track retrieved successfully',
   TRACK_NOT_FOUND: 'Track not found',
   TRACK_CREATED_SUCCESSFULLY: 'Track created successfully',
   TRACK_UPDATED_SUCCESSFULLY: 'Track updated successfully',
-  TRACK_DELETED_SUCCESSFULLY: 'Track deleted successfully'
-};
+  TRACK_DELETED_SUCCESSFULLY: (trackName: string) => `Track:${trackName} deleted successfully`,
+  FAVORITES_RETRIEVED_SUCCESSFULLY: 'Favorites retrieved successfully',
+  FAVORITE_NOT_FOUND: 'Favorite not found',
+  FAVORITE_ADDED_SUCCESSFULLY: 'Favorite added successfully.',
+  FAVORITE_REMOVED_SUCCESSFULLY: 'Favorite removed successfully.',
+  FAVORITE_ALREADY_EXISTS: 'Favorite already exists'
+} as const;

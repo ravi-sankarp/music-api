@@ -81,6 +81,16 @@ export const updateTrack = asyncHandler(async (req: AuthenticatedRequest, res: R
 
 export const deleteTrack = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   const { id: trackId } = req.params as IdType;
+  const track = await tracksService.findTrackById(req.token.tenant_id, trackId);
+  if (!track) {
+    sendResponse(res, {
+      message: RESPONSES.TRACK_NOT_FOUND,
+      status: HTTP_STATUS_CODES.NOT_FOUND,
+      data: null
+    });
+    return;
+  }
+
   const deletedTrack = await tracksService.deleteTrack(trackId, req.token.tenant_id);
 
   if (!deletedTrack) {
@@ -93,7 +103,7 @@ export const deleteTrack = asyncHandler(async (req: AuthenticatedRequest, res: R
   }
 
   sendResponse(res, {
-    message: RESPONSES.TRACK_DELETED_SUCCESSFULLY,
+    message: RESPONSES.TRACK_DELETED_SUCCESSFULLY(track.dataValues.name),
     status: HTTP_STATUS_CODES.OK,
     data: null
   });

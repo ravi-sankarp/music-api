@@ -1,9 +1,11 @@
 import { z } from 'zod';
 
 export const artistSchema = z.object({
-  name: z.string().min(1),
-  grammy: z.coerce.number().min(0),
-  hidden: z.boolean()
+  name: z
+    .string({ required_error: 'name is required' })
+    .min(1, { message: 'Name is a required field' }),
+  grammy: z.coerce.number({ required_error: 'grammy is required' }).min(0),
+  hidden: z.boolean({ required_error: 'hidden is required' })
 });
 export const artistUpdateSchema = artistSchema.partial();
 

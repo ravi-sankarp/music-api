@@ -2,22 +2,26 @@ import { z } from 'zod';
 
 export const userLoginSchema = z.object({
   email: z
-    .string()
+    .string({ required_error: 'email is required' })
     .email('Invalid email address')
     .transform((val) => val.toLowerCase()),
-  password: z.string().min(4, 'Password must be at least 6 characters long')
+  password: z
+    .string({ required_error: 'password is required' })
+    .min(4, 'Password must be at least 6 characters long')
 });
 
 export const userSignupSchema = z.object({
   email: z
-    .string()
+    .string({ required_error: 'email is required' })
     .email('Invalid email address')
     .transform((val) => val.toLowerCase()),
-  password: z.string().min(4, 'Password must be at least 6 characters long')
+  password: z
+    .string({ required_error: 'password is required' })
+    .min(4, 'Password must be at least 6 characters long')
 });
 
 export const userSignupWithRoleSchema = userSignupSchema.extend({
-  role: z.enum(['EDITOR', 'VIEWER'])
+  role: z.enum(['EDITOR', 'VIEWER'], { required_error: 'role is required' })
 });
 
 export const passwordChangeSchema = z.object({

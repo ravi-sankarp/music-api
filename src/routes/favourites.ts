@@ -1,15 +1,36 @@
 import { Router } from 'express';
-import * as authController from '../controllers/auth';
+import * as favoritesController from '../controllers/favorites';
 import { validate } from '../middlewares/validator';
-import { userLoginSchema, userSignupSchema } from '../common/validations/users';
 import { userProtectMiddleware } from '../middlewares/authProtect';
+import { idSchema } from '../common/validations/common';
+import {
+  addFavoriteSchema,
+  favoriteCategorySchema,
+  favoritesQuerySchema
+} from '../common/validations/favorites';
 
 const router = Router();
 
-router.post('login', validate(userLoginSchema), authController.userLogin);
+router.get(
+  '/:category',
+  userProtectMiddleware('all'),
+  validate(favoritesQuerySchema, 'query'),
+  validate(favoriteCategorySchema, 'params'),
+  favoritesController.getFavorites
+);
 
-router.post('signup', validate(userSignupSchema), authController.userSignup);
+router.post(
+  '/add-favorite',
+  userProtectMiddleware('all'),
+  validate(addFavoriteSchema),
+  favoritesController.addFavorite
+);
 
-router.get('logout', userProtectMiddleware('all'), authController.userLogout);
+router.delete(
+  '/remove-favorite/:id',
+  userProtectMiddleware('all'),
+  validate(idSchema, 'params'),
+  favoritesController.removeFavorite
+);
 
 export default router;

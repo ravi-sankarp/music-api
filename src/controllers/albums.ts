@@ -81,6 +81,16 @@ export const updateAlbum = asyncHandler(async (req: AuthenticatedRequest, res: R
 
 export const deleteAlbum = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   const { id: albumId } = req.params as IdType;
+  const album = await albumsService.findAlbumById(req.token.tenant_id, albumId);
+  if (!album) {
+    sendResponse(res, {
+      message: RESPONSES.ALBUM_NOT_FOUND,
+      status: HTTP_STATUS_CODES.NOT_FOUND,
+      data: null
+    });
+    return;
+  }
+
   const deletedAlbum = await albumsService.deleteAlbum(albumId, req.token.tenant_id);
 
   if (!deletedAlbum) {
@@ -93,7 +103,7 @@ export const deleteAlbum = asyncHandler(async (req: AuthenticatedRequest, res: R
   }
 
   sendResponse(res, {
-    message: RESPONSES.ALBUM_DELETED_SUCCESSFULLY,
+    message: RESPONSES.ALBUM_DELETED_SUCCESSFULLY(album.dataValues.name),
     status: HTTP_STATUS_CODES.OK,
     data: null
   });

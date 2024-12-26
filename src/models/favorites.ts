@@ -11,7 +11,7 @@ export interface FavoriteAttributes {
   user_id: string;
   tenant_id: string;
   item_id: string;
-  type?: number;
+  type: number;
   created_at: Date;
   updated_at?: Date;
 }
@@ -44,7 +44,7 @@ export const Favorites = db.define<FavoriteInstance>(
       type: DataTypes.UUID
     },
     type: {
-      allowNull: true,
+      allowNull: false,
       type: DataTypes.INTEGER
     },
     created_at: {

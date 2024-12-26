@@ -81,6 +81,16 @@ export const updateArtist = asyncHandler(async (req: AuthenticatedRequest, res: 
 
 export const deleteArtist = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   const { id: artistId } = req.params as IdType;
+  const artist = await artistsService.findArtistById(req.token.tenant_id, artistId);
+  if (!artist) {
+    sendResponse(res, {
+      message: RESPONSES.ARTIST_NOT_FOUND,
+      status: HTTP_STATUS_CODES.NOT_FOUND,
+      data: null
+    });
+    return;
+  }
+
   const deletedArtist = await artistsService.deleteArtist(artistId, req.token.tenant_id);
 
   if (!deletedArtist) {
@@ -93,7 +103,7 @@ export const deleteArtist = asyncHandler(async (req: AuthenticatedRequest, res: 
   }
 
   sendResponse(res, {
-    message: RESPONSES.ARTIST_DELETED_SUCCESSFULLY,
+    message: RESPONSES.ARTIST_DELETED_SUCCESSFULLY(artist.dataValues.name),
     status: HTTP_STATUS_CODES.OK,
     data: null
   });

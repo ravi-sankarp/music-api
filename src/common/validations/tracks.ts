@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
 export const trackSchema = z.object({
-  name: z.string().min(1),
-  album_id: z.string().uuid(),
-  artist_id: z.string().uuid(),
-  duration: z.coerce.number().positive(),
-  hidden: z.boolean()
+  name: z.string({ required_error: 'name is required' }).min(1),
+  album_id: z.string({ required_error: 'album_id is required' }).uuid(),
+  artist_id: z.string({ required_error: 'artist_id is required' }).uuid(),
+  duration: z.coerce.number({ required_error: 'duration is required' }).positive(),
+  hidden: z.boolean({ required_error: 'hidden is required' })
 });
 
 export const trackUpdateSchema = trackSchema.omit({ album_id: true, artist_id: true }).partial();
