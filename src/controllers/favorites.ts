@@ -10,7 +10,7 @@ import {
 } from '../common/validations/favorites';
 import * as favoritesService from '../db/favorites';
 import { FavoriteCreationAttributes } from '../models/favorites';
-import { UniqueConstraintError } from 'sequelize';
+import { DatabaseError, UniqueConstraintError } from 'sequelize';
 
 export const getFavorites = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   const { category } = req.params as FavoriteCategoryPayload;
@@ -54,6 +54,16 @@ export const addFavorite = asyncHandler(async (req: AuthenticatedRequest, res: R
         data: null
       });
       return;
+    }
+    if (err instanceof DatabaseError) {
+      if (err.message.includes('Invalid item_id')) {
+        sendResponse(res, {
+          message: RESPONSES.BAD_REQUEST,
+          status: HTTP_STATUS_CODES.BAD_REQUEST,
+          data: null
+        });
+        return;
+      }
     }
     throw err;
   }

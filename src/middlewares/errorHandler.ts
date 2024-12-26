@@ -31,7 +31,7 @@ export const errorHandler = (
     sendResponse(res, {
       status: statusCode,
       data: null,
-      message: 'Something went wrong ! Please try again',
+      message: err?.message ?? 'Something went wrong ! Please try again',
       error: null
     });
     return;
