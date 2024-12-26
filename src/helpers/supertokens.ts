@@ -19,7 +19,8 @@ export const supertokensInit = supertokens.init({
   recipeList: [
     Session.init({
       getTokenTransferMethod: () => 'header',
-      antiCsrf: 'NONE'
+      antiCsrf: 'NONE',
+      jwksRefreshIntervalSec: 3600 * 24
     })
   ]
 });
@@ -40,11 +41,13 @@ export const createSession = async (payload: {
 
 export const validateSession = async (token: string) => {
   try {
-    const verificationResponse = await Session.getSessionWithoutRequestResponse(token);
+    const verificationResponse = await Session.getSessionWithoutRequestResponse(token, '', {
+      checkDatabase: true,
+      sessionRequired: true
+    });
     const tokenPayload = verificationResponse.getAccessTokenPayload() as JwtPayload;
     return tokenPayload;
   } catch (err) {
-    console.log(err);
     throw new ApiError(RESPONSES.UNAUTHORIZED_ACCESS, HTTP_STATUS_CODES.UNAUTHORIZED);
   }
 };
