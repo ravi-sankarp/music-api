@@ -11,7 +11,6 @@ export const findFavorites = async (
   { limit, offset }: FavoriteQuery
 ) => {
   const type = FavoriteTypes[category.toUpperCase() as keyof typeof FavoriteTypes];
-  console.log({ category, type });
   const query = `
     SELECT 
       f.favourite_id AS "favorite_id",
